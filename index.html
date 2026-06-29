@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة التدريب على مفردات القراءة - Dr. Ayed Elstohy</title>
+    <!-- استدعاء خط Cairo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #dc2626;
+            --primary-hover: #b91c1c;
+            --primary-light: #fef2f2;
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+            --bg-main: #f9fafb;
+            --card-bg: #ffffff;
+            --success: #16a34a;
+            --error: #dc2626;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            color: white;
+            padding: 30px 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .setup-card, .quiz-card, .results-card {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f3f4f6;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            background-color: white;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        select:focus {
+            border-color: var(--primary-color);
+        }
+
+        .btn {
+            display: inline-block;
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-meta {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .question-text {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background-color: white;
+            border: 2px solid #e5e7eb;
+            padding: 14px;
+            border-radius: 8px;
+            text-align: right;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-color);
+            background-color: var(--primary-light);
+        }
+
+        .option-btn.correct {
+            background-color: #dcfce7 !important;
+            border-color: var(--success) !important;
+            color: #14532d !important;
+        }
+
+        .option-btn.incorrect {
+            background-color: #fee2e2 !important;
+            border-color: var(--error) !important;
+            color: #7f1d1d !important;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .result-score {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--primary-color);
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .translation-hint {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: -15px;
+            margin-bottom: 15px;
+            background-color: #f3f4f6;
+            padding: 6px 12px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>مفردات ومصطلحات القراءة</h1>
+        <p>إعداد وتنسيق: DR / Ayed Elstohy</p>
+    </header>
+
+    <!-- شاشة اختيار النموذج -->
+    <div id="setup-screen" class="setup-card">
+        <label for="model-select">اختر النموذج المستهدف للتدريب:</label>
+        <select id="model-select">
+            <!-- سيتم تعبئتها ديناميكياً -->
+        </select>
+        <button class="btn" onclick="startQuiz()">ابدأ الاختبار الآن</button>
+    </div>
+
+    <!-- شاشة الاختبار -->
+    <div id="quiz-screen" class="quiz-card hidden">
+        <div class="progress-bar">
+            <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        <div class="question-meta" id="question-number">السؤال 1 من 10</div>
+        <div class="question-text" id="question-word">الكلمة تظهر هنا</div>
+        <div class="translation-hint hidden" id="translation-hint">الترجمة العربية</div>
+        
+        <div class="options-grid" id="options-container">
+            <!-- الأزرار تولد برمجياً -->
+        </div>
+        <button id="next-btn" class="btn hidden" onclick="nextQuestion()">السؤال التالي</button>
+    </div>
+
+    <!-- شاشة النتائج -->
+    <div id="results-screen" class="results-card hidden">
+        <h2 style="text-align: center; font-weight: 900;">اكتمل الاختبار!</h2>
+        <div class="result-score" id="score-text">0 / 0</div>
+        <p id="feedback-text" style="text-align: center; font-weight: 700; margin-bottom: 20px;"></p>
+        <button class="btn" onclick="restartApp()">إعادة المحاولة واختيار نموذج آخر</button>
+    </div>
+
+    <footer>
+        جميع الحقوق محفوظة المادة العلمية © awadh3aa@gmail.com
+    </footer>
+</div>
+
+<script>
+    // قاعدة البيانات الكاملة من الملف المرفق مجمعة حسب النماذج
+    const allData = {
+        "المقدمة (صفحة 50)": [
+            { word: "food", meaning: "fuel", ar: "طعام – وقود" },
+            { word: "inexpensive", meaning: "modest", ar: "رخيص – متواضع" },
+            { word: "misbehave", meaning: "Act out", ar: "يسيء التصرف" },
+            { word: "declared independence", meaning: "announced their freedom", ar: "اعلان الاستقلال" },
+            { word: "trained", meaning: "conditioned", ar: "مدرب" },
+            { word: "opposite ends of the world", meaning: "different cultures", ar: "ثقافات مختلفة" },
+            { word: "susceptible to automation", meaning: "automation potential", ar: "قابل للأتمتة" },
+            { word: "Analytic content", meaning: "scientific", ar: "محتوى تحليلي – علمي" },
+            { word: "with a little help from our cells", meaning: "Viruses need a host to live", ar: "بمساعدة الخلايا – يحتاج الفيروس لمضيف للعيش" },
+            { word: "relationships", meaning: "attachments to other people", ar: "علاقات مع الناس" },
+            { word: "administrative support", meaning: "Data processing and data collection", ar: "الدعم الإداري – تجميع ومعالجة البيانات" }
+        ],
+        "Model 5": [
+            { word: "Cartographer", meaning: "Map maker", ar: "صانع الخرائط" },
+            { word: "Unscheduled", meaning: "NOT planned", ar: "غير مجدول\\مخطط" },
+            { word: "Carved", meaning: "Shaped", ar: "نحت – شكل" },
+            { word: "Intelligibility", meaning: "Similarity", ar: "تشابه" },
+            { word: "Pioneering", meaning: "use for the first time", ar: "استخدم شيء لأول مرة" }
+        ],
+        "Model 6": [
+            { word: "Expedition", meaning: "Journey", ar: "رحلة شاقة – رحلة" },
+            { word: "Equilibrium", meaning: "Balance", ar: "التوازن – الاتزان" },
+            { word: "Location", meaning: "Place", ar: "موقع" },
+            { word: "Leisure", meaning: "Free", ar: "فراغ" },
+            { word: "risks", meaning: "dangers", ar: "مخاطر" },
+            { word: "Crucial", meaning: "Important", ar: "هام - ضروري" },
+            { word: "Essentially", meaning: "Basically", ar: "أساسي" }
+        ],
+        "Model 7": [
+            { word: "Essential", meaning: "Important", ar: "ضروري – ملح" },
+            { word: "Clues", meaning: "Signs", ar: "علامات" },
+            { word: "Dozing", meaning: "Sleeping", ar: "نائم" },
+            { word: "Stimuli", meaning: "Things produce reaction", ar: "محفزات" },
+            { word: "Allocates", meaning: "assigning money", ar: "يخصص" },
+            { word: "Compatible", meaning: "matching", ar: "متوافق" }
+        ],
+        "Model 8": [
+            { word: "Effortless", meaning: "Without working", ar: "بدون جهد" },
+            { word: "Pleased", meaning: "Happy", ar: "مسرور – سعيد" },
+            { word: "Resemble", meaning: "Look like", ar: "يشبه" },
+            { word: "Legend", meaning: "Tale", ar: "أسطورة – حكاية" },
+            { word: "derived from", meaning: "Originated", ar: "مشتق من" }
+        ],
+        "Model 9": [
+            { word: "Assumed", meaning: "Took", ar: "يفترض" },
+            { word: "Lacking", meaning: "missing", ar: "يفتقر الي – مفقود" },
+            { word: "Premature", meaning: "early", ar: "مبكر" },
+            { word: "Forceful", meaning: "Powerful", ar: "قوي" },
+            { word: "Nocturnal", meaning: "Active at night", ar: "نشط ليليا" },
+            { word: "Compound", meaning: "Complex", ar: "مركب - معقد" }
+        ],
+        "Model 10": [
+            { word: "Celebrated", meaning: "Enjoyed", ar: "احتفل - استمتع" },
+            { word: "Transfigure", meaning: "Change", ar: "تحويل - تغيير" },
+            { word: "Piles", meaning: "Stacks", ar: "أكوام" },
+            { word: "Ancestors", meaning: "Predecessors", ar: "أسلاف" },
+            { word: "Address", meaning: "Talk about something", ar: "يخاطب" }
+        ],
+        "Model 11": [
+            { word: "Greedy", meaning: "Wanting more", ar: "طماع" },
+            { word: "Tutor", meaning: "Teacher", ar: "معلم" },
+            { word: "Sufficient", meaning: "Enough", ar: "كاف" },
+            { word: "Brighter", meaning: "More shiny", ar: "أكثر اشراقا" },
+            { word: "far-fetched", meaning: "difficult to believe", ar: "بعيد المنال" },
+            { word: "Retrospect", meaning: "looking back", ar: "استرجاع الماضي" },
+            { word: "Inconvenience", meaning: "Trouble", ar: "ازعاج" }
+        ],
+        "Model 12": [
+            { word: "Occur", meaning: "Happen", ar: "يحدث" },
+            { word: "Nutritious", meaning: "high food value", ar: "ذو قيمة غذائية عالية" },
+            { word: "Individual", meaning: "Separate", ar: "فرد – متفرق" },
+            { word: "Essential", meaning: "Necessary", ar: "ضروري – أساسي" },
+            { word: "Current", meaning: "Recent", ar: "حديث – حالي" },
+            { word: "Remarks", meaning: "Comments", ar: "تعليقات – ملاحظات" },
+            { word: "Reign", meaning: "Rule", ar: "فترة حكم" }
+        ],
+        "Model 13": [
+            { word: "Physician", meaning: "Doctor", ar: "طبيب معالج" },
+            { word: "Proficient", meaning: "Skilled", ar: "بارع – ماهر" },
+            { word: "Suffer", meaning: "having problems", ar: "يعاني" },
+            { word: "Examine", meaning: "Looking", ar: "يفحص" },
+            { word: "Function", meaning: "process", ar: "وظيفة" },
+            { word: "Versatile", meaning: "Useful", ar: "متعدد الاستعمال" }
+        ],
+        "Model 14": [
+            { word: "Pronunciation", meaning: "Say", ar: "نطق" },
+            { word: "Herbs", meaning: "Plants", ar: "أعشاب" },
+            { word: "Myriad", meaning: "Multiple", ar: "لا تعد ولا تحصي" },
+            { word: "Tamed", meaning: "Controlled", ar: "ترويض" },
+            { word: "Mankind", meaning: "Human being", ar: "الجنس البشري" }
+        ],
+        "Model 15": [
+            { word: "But", meaning: "However", ar: "لكن" },
+            { word: "Connecting", meaning: "Joining", ar: "ربط – اتصال" },
+            { word: "Agreements", meaning: "Arrangements", ar: "ترتيب – اتفاق" },
+            { word: "Governed", meaning: "Controlled", ar: "محكومة" }
+        ],
+        "Model 16 & 17": [
+            { word: "Because", meaning: "Since", ar: "لأن" },
+            { word: "expanded", meaning: "Moved", ar: "انتقل" },
+            { word: "Discovered", meaning: "Found", ar: "اكتشف" },
+            { word: "Accurate", meaning: "Correct", ar: "صحيح" },
+            { word: "Introduced", meaning: "Began", ar: "قدم – بدأ" },
+            { word: "Invented", meaning: "Made", ar: "اخترع" },
+            { word: "Theory", meaning: "Idea", ar: "نظرية" },
+            { word: "Expresses", meaning: "Explains", ar: "يعبر" },
+            { word: "Judge", meaning: "evaluate / consider", ar: "يحكم – يقيم" },
+            { word: "Find out", meaning: "determine / calculate", ar: "يكتشف" }
+        ],
+        "Model 18": [
+            { word: "So", meaning: "Therefore", ar: "لذا" },
+            { word: "Produce", meaning: "Make", ar: "ينتج" },
+            { word: "Increases", meaning: "Grows", ar: "زيادة نمو" },
+            { word: "Isolate", meaning: "Separate", ar: "فصل – عزل" },
+            { word: "carried out", meaning: "Performed", ar: "تم تنفيذها" },
+            { word: "Thrust", meaning: "Intention", ar: "نية" },
+            { word: "Extinction", meaning: "Destruction", ar: "انقراض" },
+            { word: "Concentrated", meaning: "Emphasized", ar: "مركز علي" }
+        ],
+        "Model 19 & 20": [
+            { word: "Though", meaning: "However", ar: "لكن" },
+            { word: "Due to", meaning: "Because of", ar: "بسبب" },
+            { word: "Multiple", meaning: "Many", ar: "عديد" },
+            { word: "Constraint", meaning: "Limit", ar: "قيد" },
+            { word: "Guidelines", meaning: "Instructions", ar: "قواعد ارشادية" },
+            { word: "Intellectual", meaning: "Thinking", ar: "فكري" },
+            { word: "Obtaining", meaning: "Getting", ar: "الحصول علي" },
+            { word: "Promote", meaning: "Help", ar: "تعزيز" },
+            { word: "Shields", meaning: "Protects", ar: "يحمي" },
+            { word: "Accumulate", meaning: "Collect", ar: "جمع" },
+            { word: "Bonds", meaning: "Connections", ar: "الروابط" },
+            { word: "Intuition", meaning: "Feeling", ar: "حدس" },
+            { word: "Phenomena", meaning: "Events", ar: "ظواهر" },
+            { word: "Sophisticated", meaning: "Complicated", ar: "معقد" }
+        ],
+        "Model 21, 22 & 23": [
+            { word: "Maintain", meaning: "Keep", ar: "يحافظ علي" },
+            { word: "Replicate", meaning: "Copy", ar: "ينسخ" },
+            { word: "Modified", meaning: "Changed", ar: "معدل" },
+            { word: "Infect", meaning: "Damage", ar: "تصيب" },
+            { word: "While", meaning: "Although", ar: "في حين" },
+            { word: "Impact", meaning: "Effect", ar: "تأثير" },
+            { word: "Reduction", meaning: "Fall", ar: "انخفاض" },
+            { word: "Worthwhile", meaning: "Useful", ar: "مفيد" },
+            { word: "Extracted", meaning: "Removed", ar: "استخراج" },
+            { word: "Desirable", meaning: "required", ar: "مرغوب فيه" },
+            { word: "Generally", meaning: "Usually", ar: "عموما" },
+            { word: "Reported", meaning: "Explained", ar: "وضح" },
+            { word: "Undergoing", meaning: "Experiencing", ar: "يمر بـ" },
+            { word: "Liability", meaning: "Fault", ar: "مسئولية" }
+        ],
+        "Model 24, 25 & 26": [
+            { word: "In addition", meaning: "Besides", ar: "بالإضافة الي" },
+            { word: "Negotiations", meaning: "Discussions", ar: "نقاشات" },
+            { word: "Booked", meaning: "Registered", ar: "سجل" },
+            { word: "Probable", meaning: "Reasonable", ar: "محتمل" },
+            { word: "Supporter", meaning: "Advocate", ar: "مؤيد" },
+            { word: "Chlorofluorocarbons", meaning: "Freons", ar: "الفريونات" },
+            { word: "For example", meaning: "For instance", ar: "على سبيل المثال" },
+            { word: "Reports", meaning: "Diaries", ar: "تقارير" },
+            { word: "Currency", meaning: "Cash", ar: "عملة" },
+            { word: "Slab", meaning: "Chunk", ar: "لوح - قطعه" },
+            { word: "Unites", meaning: "Combine", ar: "يوحد" },
+            { word: "Unstable", meaning: "Loose", ar: "غير مستقر" }
+        ],
+        "Model 27, 28 & 29": [
+            { word: "Rapid", meaning: "Quick", ar: "سريع" },
+            { word: "Chief", meaning: "Main", ar: "رئيسي" },
+            { word: "Comprehensive", meaning: "Complete", ar: "شامل" },
+            { word: "Ideally", meaning: "Perfectly", ar: "مثالي" },
+            { word: "Abandoned", meaning: "Stopped", ar: "توقف" },
+            { word: "Thus", meaning: "Therefore", ar: "وبالتالي" },
+            { word: "Descending", meaning: "Falling", ar: "ينزل" },
+            { word: "Flame", meaning: "Fire", ar: "لهب" },
+            { word: "Legislation", meaning: "Law", ar: "تشريع" },
+            { word: "Impure", meaning: "Dirty", ar: "غير نقي" },
+            { word: "Shift", meaning: "Change", ar: "تحول" },
+            { word: "Rates", meaning: "Amounts", ar: "معدلات" },
+            { word: "Alternative", meaning: "Option", ar: "بديل" },
+            { word: "Impressive", meaning: "Extraordinary", ar: "مثير للإعجاب" }
+        ],
+        "Model 30 & 31": [
+            { word: "Funds", meaning: "Money", ar: "أموال" },
+            { word: "Define", meaning: "Explain", ar: "يشرح" },
+            { word: "Device", meaning: "Equipment", ar: "جهاز" },
+            { word: "Illustrated", meaning: "Demonstrated", ar: "يوضح" },
+            { word: "Documented", meaning: "Recorded", ar: "موثق" },
+            { word: "Implies", meaning: "Suggests", ar: "يلمح" }
+        ],
+        "Model 32 إلى 40": [
+            { word: "Growth", meaning: "Development", ar: "تطوير" },
+            { word: "Response", meaning: "Reply", ar: "إجابة" },
+            { word: "Evidence", meaning: "Facts", ar: "دليل" },
+            { word: "Income", meaning: "wage", ar: "دخل" },
+            { word: "Desires", meaning: "Interests", ar: "رغبات" },
+            { word: "Antiques", meaning: "very old", ar: "عتيق جدا" },
+            { word: "Overloaded", meaning: "Feeling under pressure", ar: "مثقل بالضغط" },
+            { word: "Potential", meaning: "possible", ar: "محتمل" },
+            { word: "Criteria", meaning: "standards", ar: "معايير" },
+            { word: "Sites", meaning: "places", ar: "مواقع" },
+            { word: "Harvested", meaning: "collected", ar: "حصد" },
+            { word: "Diet", meaning: "food", ar: "غذاء" },
+            { word: "Thrive", meaning: "grow", ar: "يزدهر" },
+            { word: "Build up", meaning: "Increase", ar: "تزداد" },
+            { word: "Convert", meaning: "Change", ar: "تحول" },
+            { word: "Aggregate", meaning: "Combine", ar: "مجموع" },
+            { word: "Characteristic", meaning: "typical", ar: "مميز" },
+            { word: "Psyche", meaning: "Mind", ar: "عقل" },
+            { word: "Irrational", meaning: "Unreasonable", ar: "غير عقلاني" },
+            { word: "Ego", meaning: "self", ar: "الأنا" },
+            { word: "Exposed", meaning: "Shown", ar: "يعرض" },
+            { word: "Specified", meaning: "Explained", ar: "يشرح تفصيلياً" },
+            { word: "Accommodates", meaning: "Fits", ar: "يتلائم" },
+            { word: "Principle", meaning: "Primary", ar: "أساسي" },
+            { word: "exhibit", meaning: "display", ar: "يعرض" },
+            { word: "Migrated", meaning: "Moved", ar: "يهاجر" },
+            { word: "Surged", meaning: "Increased", ar: "يزداد" },
+            { word: "Staple", meaning: "Common", ar: "شائع" },
+            { word: "Promotional", meaning: "Marketing", ar: "دعائي" },
+            { word: "Minuscule", meaning: "Tiny", ar: "متناهي الصغر" }
+        ],
+        "Model 41 إلى 50": [
+            { word: "Infection", meaning: "Illness", ar: "عدوي" },
+            { word: "Cure", meaning: "Solution", ar: "علاج" },
+            { word: "status", meaning: "level", ar: "مستوى" },
+            { word: "Vacant", meaning: "Empty", ar: "فارغ" },
+            { word: "Traders", meaning: "Dealers", ar: "تجار" },
+            { word: "Possessions", meaning: "Property", ar: "ملكية" },
+            { word: "Shelter", meaning: "Protection", ar: "مأوى" },
+            { word: "broken out", meaning: "started", ar: "اندلع" },
+            { word: "Marked", meaning: "Indicated", ar: "يشير" },
+            { word: "Assure", meaning: "Swear", ar: "يؤكد" },
+            { word: "Sequence", meaning: "Order", ar: "تسلسل" },
+            { word: "Consistent", meaning: "Steady", ar: "ثابت" },
+            { word: "Peripheral", meaning: "Secondary", ar: "هامشي" },
+            { word: "Lanes", meaning: "Routes", ar: "ممرات" },
+            { word: "Recur", meaning: "Repeat", ar: "يتكرر" },
+            { word: "Pioneering", meaning: "Original", ar: "أصلي" },
+            { word: "Pitting", meaning: "Forcing", ar: "مواجهة" },
+            { word: "Moot", meaning: "Arguable", ar: "موضع نقاش" },
+            { word: "Exorbitant", meaning: "Steep", ar: "هائل" },
+            { word: "Also", meaning: "As well", ar: "أيضاً" },
+            { word: "soil", meaning: "Land", ar: "تربة" },
+            { word: "Inhabited", meaning: "Occupied", ar: "مأهولة" },
+            { word: "Indigenous", meaning: "Native", ar: "سكان محليين" },
+            { word: "familiar", meaning: "Well-known", ar: "مألوف" },
+            { word: "methods", meaning: "ways", ar: "طرق" },
+            { word: "distinct", meaning: "different", ar: "مختلف" },
+            { word: "comprise", meaning: "contain", ar: "يضم" },
+            { word: "constitute", meaning: "forms", ar: "تشكل" },
+            { word: "identify", meaning: "name", ar: "يصنف" },
+            { word: "agricultural", meaning: "farming", ar: "زراعي" },
+            { word: "random", meaning: "unplanned", ar: "عشوائي" },
+            { word: "legitimate", meaning: "acceptable", ar: "مقبول" },
+            { word: "perplexed", meaning: "confused", ar: "مرتبك" },
+            { word: "aquatic", meaning: "ocean", ar: "مائي" },
+            { word: "polluting", meaning: "harming", ar: "ملوث" },
+            { word: "acidic", meaning: "toxic", ar: "حمضي" },
+            { word: "purchase", meaning: "buy", ar: "شراء" },
+            { word: "hike", meaning: "increase", ar: "زيادة" },
+            { word: "alarming", meaning: "frightening", ar: "مفزع" },
+            { word: "plunge", meaning: "launch", ar: "إطلاق بقوة" }
+        ]
+    };
+
+    let currentQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let hasAnswered = false;
+
+    // تجميع كل المترادفات المتاحة في ملف واحد لإنشاء الخيارات الخاطئة منها
+    const allMeaningsPool = [];
+    for (let model in allData) {
+        allData[model].forEach(item => {
+            if(!allMeaningsPool.includes(item.meaning)) {
+                allMeaningsPool.push(item.meaning);
+            }
+        });
+    }
+
+    // تشغيل عند تحميل الصفحة
+    window.onload = function() {
+        const select = document.getElementById('model-select');
+        for (let modelName in allData) {
+            let option = document.createElement('option');
+            option.value = modelName;
+            option.textContent = modelName + ` (${allData[modelName].length} كلمات)`;
+            select.appendChild(option);
+        }
+    };
+
+    // بدء الاختبار لنموذج معين
+    function startQuiz() {
+        const selectedModel = document.getElementById('model-select').value;
+        const rawData = allData[selectedModel];
+        
+        // خلط الكلمات لضمان التنوع العشوائي الكامل عند كل محاولة بدء جديدة
+        currentQuestions = [...rawData].sort(() => 0.5 - Math.random());
+        currentQuestionIndex = 0;
+        score = 0;
+
+        document.getElementById('setup-screen').classList.add('hidden');
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        
+        showQuestion();
+    }
+
+    // عرض السؤال الحالي
+    function showQuestion() {
+        hasAnswered = false;
+        document.getElementById('next-btn').classList.add('hidden');
+        
+        // إخفاء الترجمة العربية في بداية السؤال الجديد
+        const translationElement = document.getElementById('translation-hint');
+        translationElement.classList.add('hidden');
+        
+        const currentItem = currentQuestions[currentQuestionIndex];
+        
+        // تحديث شريط التقدم والبيانات الميتا
+        const total = currentQuestions.length;
+        document.getElementById('question-number').textContent = `السؤال ${currentQuestionIndex + 1} من ${total}`;
+        document.getElementById('progress-fill').style.width = `${((currentQuestionIndex) / total) * 100}%`;
+        
+        // تعيين نصوص الكلمات
+        document.getElementById('question-word').textContent = currentItem.word;
+        document.getElementById('translation-hint').textContent = `الترجمة التقريبية: ${currentItem.ar}`;
+
+        // توليد الخيارات (الخيار الصحيح + 3 خيارات خاطئة من الملف)
+        const options = [currentItem.meaning];
+        
+        // سحب خيارات عشوائية خاطئة لا تشبه الإجابة الصحيحة
+        const filteredPool = allMeaningsPool.filter(m => m !== currentItem.meaning);
+        const shuffledPool = filteredPool.sort(() => 0.5 - Math.random());
+        
+        for(let i = 0; i < Math.min(3, shuffledPool.length); i++) {
+            options.push(shuffledPool[i]);
+        }
+
+        // خلط الخيارات الأربعة لكي لا تصبح الإجابة الصحيحة في نفس المكان دائماً
+        options.sort(() => 0.5 - Math.random());
+
+        // بناء أزرار الخيارات داخل الصفحة
+        const container = document.getElementById('options-container');
+        container.innerHTML = '';
+        
+        options.forEach(optionText => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.textContent = optionText;
+            btn.onclick = function() { checkAnswer(btn, optionText, currentItem.meaning); };
+            container.appendChild(btn);
+        });
+    }
+
+    // التحقق من الإجابة المختارة
+    function checkAnswer(selectedBtn, chosenOption, correctOption) {
+        if (hasAnswered) return; // منع التعديل بعد الاختيار
+        hasAnswered = true;
+
+        const container = document.getElementById('options-container');
+        const buttons = container.getElementsByClassName('option-btn');
+
+        if (chosenOption === correctOption) {
+            selectedBtn.classList.add('correct');
+            score++;
+        } else {
+            selectedBtn.classList.add('incorrect');
+            // إظهار الإجابة الصحيحة بلون أخضر
+            for (let btn of buttons) {
+                if (btn.textContent === correctOption) {
+                    btn.classList.add('correct');
+                }
+            }
+        }
+
+        // إظهار الترجمة العربية الآن بعد الاختيار لتعزيز الحفظ والفهم للمتعلم
+        document.getElementById('translation-hint').classList.remove('hidden');
+
+        // إظهار زر الانتقال للسؤال القادم
+        document.getElementById('next-btn').classList.remove('hidden');
+    }
+
+    // الانتقال للسؤال التالي أو عرض النتيجة
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < currentQuestions.length) {
+            showQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    // شاشة عرض النتيجة النهائية
+    function showResults() {
+        document.getElementById('quiz-screen').classList.add('hidden');
+        document.getElementById('results-screen').classList.remove('hidden');
+        
+        const total = currentQuestions.length;
+        document.getElementById('score-text').textContent = `${score} / ${total}`;
+        
+        const percentage = (score / total) * 100;
+        let feedback = "";
+        if (percentage === 100) feedback = "ممتـاز! إجابة كاملة وصحيحة 🎯";
+        else if (percentage >= 80) feedback = "عمل رائع جداً! أداؤك متميز 👏";
+        else if (percentage >= 50) feedback = "أداء جيد، لكن تحتاج لمراجعة بعض الكلمات 👍";
+        else feedback = "حاول مرة أخرى لتثبيت وحفظ المفردات بشكل أفضل 📚";
+        
+        document.getElementById('feedback-text').textContent = feedback;
+    }
+
+    // إعادة تصفير التطبيق والعودة للقائمة الرئيسية
+    function restartApp() {
+        document.getElementById('results-screen').classList.add('hidden');
+        document.getElementById('setup-screen').classList.remove('hidden');
+    }
+</script>
+
+</body>
+</html>
