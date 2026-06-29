@@ -261,7 +261,7 @@
 </div>
 
 <script>
-    // قاعدة البيانات الكاملة من الملف المرفق مجمعة حسب النماذج
+    // قاعدة البيانات بعد فك الدمج وفصل كل نموذج على حدة بالتفصيل
     const allData = {
         "المقدمة (صفحة 50)": [
             { word: "food", meaning: "fuel", ar: "طعام – وقود" },
@@ -361,10 +361,12 @@
             { word: "Agreements", meaning: "Arrangements", ar: "ترتيب – اتفاق" },
             { word: "Governed", meaning: "Controlled", ar: "محكومة" }
         ],
-        "Model 16 & 17": [
+        "Model 16": [
             { word: "Because", meaning: "Since", ar: "لأن" },
             { word: "expanded", meaning: "Moved", ar: "انتقل" },
-            { word: "Discovered", meaning: "Found", ar: "اكتشف" },
+            { word: "Discovered", meaning: "Found", ar: "اكتشف" }
+        ],
+        "Model 17": [
             { word: "Accurate", meaning: "Correct", ar: "صحيح" },
             { word: "Introduced", meaning: "Began", ar: "قدم – بدأ" },
             { word: "Invented", meaning: "Made", ar: "اخترع" },
@@ -383,12 +385,15 @@
             { word: "Extinction", meaning: "Destruction", ar: "انقراض" },
             { word: "Concentrated", meaning: "Emphasized", ar: "مركز علي" }
         ],
-        "Model 19 & 20": [
+        "Model 19": [
             { word: "Though", meaning: "However", ar: "لكن" },
             { word: "Due to", meaning: "Because of", ar: "بسبب" },
             { word: "Multiple", meaning: "Many", ar: "عديد" },
             { word: "Constraint", meaning: "Limit", ar: "قيد" },
             { word: "Guidelines", meaning: "Instructions", ar: "قواعد ارشادية" },
+            { word: "Inexpensive", meaning: "Modest", ar: "غير غالي - متواضع" }
+        ],
+        "Model 20": [
             { word: "Intellectual", meaning: "Thinking", ar: "فكري" },
             { word: "Obtaining", meaning: "Getting", ar: "الحصول علي" },
             { word: "Promote", meaning: "Help", ar: "تعزيز" },
@@ -397,135 +402,240 @@
             { word: "Bonds", meaning: "Connections", ar: "الروابط" },
             { word: "Intuition", meaning: "Feeling", ar: "حدس" },
             { word: "Phenomena", meaning: "Events", ar: "ظواهر" },
-            { word: "Sophisticated", meaning: "Complicated", ar: "معقد" }
+            { word: "Sophisticated", meaning: "Complicated", ar: "معقد" },
+            { word: "Opposite ends of the world", meaning: "Different cultures", ar: "نهايات العالم المتقابلة - ثقافات مختلفة" },
+            { word: "Inconvenience", meaning: "Trouble", ar: "ازعاج" }
         ],
-        "Model 21, 22 & 23": [
+        "Model 21": [
             { word: "Maintain", meaning: "Keep", ar: "يحافظ علي" },
+            { word: "Sufficient", meaning: "Enough", ar: "كاف" },
             { word: "Replicate", meaning: "Copy", ar: "ينسخ" },
             { word: "Modified", meaning: "Changed", ar: "معدل" },
-            { word: "Infect", meaning: "Damage", ar: "تصيب" },
+            { word: "Infect", meaning: "Damage", ar: "تصيب" }
+        ],
+        "Model 22": [
             { word: "While", meaning: "Although", ar: "في حين" },
             { word: "Impact", meaning: "Effect", ar: "تأثير" },
             { word: "Reduction", meaning: "Fall", ar: "انخفاض" },
             { word: "Worthwhile", meaning: "Useful", ar: "مفيد" },
             { word: "Extracted", meaning: "Removed", ar: "استخراج" },
-            { word: "Desirable", meaning: "required", ar: "مرغوب فيه" },
+            { word: "Desirable", meaning: "required", ar: "مرغوب فيه" }
+        ],
+        "Model 23": [
             { word: "Generally", meaning: "Usually", ar: "عموما" },
             { word: "Reported", meaning: "Explained", ar: "وضح" },
             { word: "Undergoing", meaning: "Experiencing", ar: "يمر بـ" },
             { word: "Liability", meaning: "Fault", ar: "مسئولية" }
         ],
-        "Model 24, 25 & 26": [
+        "Model 24": [
             { word: "In addition", meaning: "Besides", ar: "بالإضافة الي" },
+            { word: "Obtaining", meaning: "Getting", ar: "الحصول علي" },
             { word: "Negotiations", meaning: "Discussions", ar: "نقاشات" },
             { word: "Booked", meaning: "Registered", ar: "سجل" },
             { word: "Probable", meaning: "Reasonable", ar: "محتمل" },
-            { word: "Supporter", meaning: "Advocate", ar: "مؤيد" },
+            { word: "Supporter", meaning: "Advocate – Defender", ar: "مؤيد - مدافع" },
+            { word: "Inconvenience", meaning: "Trouble", ar: "ازعاج" }
+        ],
+        "Model 25": [
+            { word: "Greedy", meaning: "Wanting more", ar: "طماع" },
+            { word: "Due to", meaning: "Because of", ar: "بسبب" },
+            { word: "far-fetched", meaning: "Difficult to believe", ar: "صعب التصديق" }
+        ],
+        "Model 26": [
             { word: "Chlorofluorocarbons", meaning: "Freons", ar: "الفريونات" },
             { word: "For example", meaning: "For instance", ar: "على سبيل المثال" },
             { word: "Reports", meaning: "Diaries", ar: "تقارير" },
             { word: "Currency", meaning: "Cash", ar: "عملة" },
             { word: "Slab", meaning: "Chunk", ar: "لوح - قطعه" },
             { word: "Unites", meaning: "Combine", ar: "يوحد" },
-            { word: "Unstable", meaning: "Loose", ar: "غير مستقر" }
+            { word: "Unstable", meaning: "Loose", ar: "غير مستقر" },
+            { word: "Relationships", meaning: "attachments to other people", ar: "علاقات" }
         ],
-        "Model 27, 28 & 29": [
+        "Model 27": [
             { word: "Rapid", meaning: "Quick", ar: "سريع" },
             { word: "Chief", meaning: "Main", ar: "رئيسي" },
             { word: "Comprehensive", meaning: "Complete", ar: "شامل" },
             { word: "Ideally", meaning: "Perfectly", ar: "مثالي" },
-            { word: "Abandoned", meaning: "Stopped", ar: "توقف" },
+            { word: "Abandoned", meaning: "Stopped", ar: "توقف" }
+        ],
+        "Model 28": [
             { word: "Thus", meaning: "Therefore", ar: "وبالتالي" },
             { word: "Descending", meaning: "Falling", ar: "ينزل" },
             { word: "Flame", meaning: "Fire", ar: "لهب" },
+            { word: "Misbehave", meaning: "Act out", ar: "يسئ التصرف" }
+        ],
+        "Model 29": [
             { word: "Legislation", meaning: "Law", ar: "تشريع" },
             { word: "Impure", meaning: "Dirty", ar: "غير نقي" },
+            { word: "For example", meaning: "For instance", ar: "علي سبيل المثال" },
             { word: "Shift", meaning: "Change", ar: "تحول" },
             { word: "Rates", meaning: "Amounts", ar: "معدلات" },
             { word: "Alternative", meaning: "Option", ar: "بديل" },
             { word: "Impressive", meaning: "Extraordinary", ar: "مثير للإعجاب" }
         ],
-        "Model 30 & 31": [
+        "Model 30": [
+            { word: "Pronounce", meaning: "Say", ar: "ينطق" },
+            { word: "Pleased", meaning: "Happy", ar: "سعيد" },
+            { word: "Myriad", meaning: "Multiple", ar: "لا تعد" },
+            { word: "Tamed", meaning: "Controlled", ar: "ترويض" },
             { word: "Funds", meaning: "Money", ar: "أموال" },
-            { word: "Define", meaning: "Explain", ar: "يشرح" },
+            { word: "Define", meaning: "Explain", ar: "يشرح" }
+        ],
+        "Model 31": [
+            { word: "Physician", meaning: "Doctor", ar: "طبيب" },
+            { word: "Examine", meaning: "Looking", ar: "يفحص" },
+            { word: "Such as", meaning: "For instance", ar: "على سبيل المثال" },
+            { word: "So", meaning: "Therefore", ar: "بالتالي" },
             { word: "Device", meaning: "Equipment", ar: "جهاز" },
+            { word: "Infect", meaning: "Damage", ar: "ضرر" },
             { word: "Illustrated", meaning: "Demonstrated", ar: "يوضح" },
             { word: "Documented", meaning: "Recorded", ar: "موثق" },
-            { word: "Implies", meaning: "Suggests", ar: "يلمح" }
+            { word: "Implies", meaning: "Suggests", ar: "يلمح" },
+            { word: "Suffer", meaning: "Having problems", ar: "يعاني من مشاكل" }
         ],
-        "Model 32 إلى 40": [
+        "Model 32": [
+            { word: "Produce", meaning: "Create", ar: "ينتج" },
             { word: "Growth", meaning: "Development", ar: "تطوير" },
             { word: "Response", meaning: "Reply", ar: "إجابة" },
             { word: "Evidence", meaning: "Facts", ar: "دليل" },
-            { word: "Income", meaning: "wage", ar: "دخل" },
+            { word: "Examining", meaning: "Testing", ar: "فحص" },
+            { word: "resemble", meaning: "look like", ar: "يشبه" }
+        ],
+        "Model 34": [
+            { word: "Brighter", meaning: "more shiny", ar: "أكثر لمعانا وإشراقا" },
+            { word: "Income", meaning: "wage", ar: "دخل - أجر" }
+        ],
+        "Model 35": [
             { word: "Desires", meaning: "Interests", ar: "رغبات" },
             { word: "Antiques", meaning: "very old", ar: "عتيق جدا" },
-            { word: "Overloaded", meaning: "Feeling under pressure", ar: "مثقل بالضغط" },
+            { word: "Overloaded", meaning: "Feeling under pressure", ar: "مثقل بالضغط" }
+        ],
+        "Model 36": [
             { word: "Potential", meaning: "possible", ar: "محتمل" },
             { word: "Criteria", meaning: "standards", ar: "معايير" },
-            { word: "Sites", meaning: "places", ar: "مواقع" },
+            { word: "Sites", meaning: "places", ar: "مواقع" }
+        ],
+        "Model 37": [
+            { word: "Device", meaning: "phone", ar: "جهاز – هاتف" },
             { word: "Harvested", meaning: "collected", ar: "حصد" },
             { word: "Diet", meaning: "food", ar: "غذاء" },
-            { word: "Thrive", meaning: "grow", ar: "يزدهر" },
+            { word: "Thrive", meaning: "grow", ar: "يزدهر" }
+        ],
+        "Model 38": [
+            { word: "So", meaning: "Therefore", ar: "بالتالي" },
+            { word: "Maintain", meaning: "Keep", ar: "يحافظ على" },
             { word: "Build up", meaning: "Increase", ar: "تزداد" },
             { word: "Convert", meaning: "Change", ar: "تحول" },
             { word: "Aggregate", meaning: "Combine", ar: "مجموع" },
             { word: "Characteristic", meaning: "typical", ar: "مميز" },
             { word: "Psyche", meaning: "Mind", ar: "عقل" },
             { word: "Irrational", meaning: "Unreasonable", ar: "غير عقلاني" },
-            { word: "Ego", meaning: "self", ar: "الأنا" },
+            { word: "Ego", meaning: "self", ar: "الأنا" }
+        ],
+        "Model 39": [
             { word: "Exposed", meaning: "Shown", ar: "يعرض" },
+            { word: "Represented", meaning: "Illustrated", ar: "يوضح" },
             { word: "Specified", meaning: "Explained", ar: "يشرح تفصيلياً" },
             { word: "Accommodates", meaning: "Fits", ar: "يتلائم" },
             { word: "Principle", meaning: "Primary", ar: "أساسي" },
-            { word: "exhibit", meaning: "display", ar: "يعرض" },
+            { word: "exhibit", meaning: "display", ar: "يعرض" }
+        ],
+        "Model 40": [
             { word: "Migrated", meaning: "Moved", ar: "يهاجر" },
             { word: "Surged", meaning: "Increased", ar: "يزداد" },
             { word: "Staple", meaning: "Common", ar: "شائع" },
             { word: "Promotional", meaning: "Marketing", ar: "دعائي" },
-            { word: "Minuscule", meaning: "Tiny", ar: "متناهي الصغر" }
+            { word: "Minuscule", meaning: "Tiny", ar: "متناهي الصغر" },
+            { word: "Proportions", meaning: "Amounts", ar: "كميات" },
+            { word: "Trained", meaning: "Conditioned", ar: "يتدرب بشروط" }
         ],
-        "Model 41 إلى 50": [
+        "Model 41": [
+            { word: "Proficient", meaning: "Skilled", ar: "مهاري" },
             { word: "Infection", meaning: "Illness", ar: "عدوي" },
             { word: "Cure", meaning: "Solution", ar: "علاج" },
-            { word: "status", meaning: "level", ar: "مستوى" },
+            { word: "Function", meaning: "Process", ar: "وظيفة" },
+            { word: "status", meaning: "level", ar: "مستوى" }
+        ],
+        "Model 42": [
+            { word: "Brighter", meaning: "More shiny", ar: "أكثر سطوع" },
             { word: "Vacant", meaning: "Empty", ar: "فارغ" },
+            { word: "Suffered", meaning: "Faced trouble", ar: "يعاني" },
+            { word: "Liability", meaning: "Responsibility", ar: "مسؤولية" },
             { word: "Traders", meaning: "Dealers", ar: "تجار" },
             { word: "Possessions", meaning: "Property", ar: "ملكية" },
+            { word: "Far – fetched", meaning: "Difficult to believe", ar: "يصعب تصديقه" }
+        ],
+        "Model 43": [
+            { word: "Proficient", meaning: "Skilled", ar: "بارع" },
+            { word: "However", meaning: "Yet", ar: "لكن" },
             { word: "Shelter", meaning: "Protection", ar: "مأوى" },
             { word: "broken out", meaning: "started", ar: "اندلع" },
             { word: "Marked", meaning: "Indicated", ar: "يشير" },
             { word: "Assure", meaning: "Swear", ar: "يؤكد" },
+            { word: "Function", meaning: "Process", ar: "وظيفة" }
+        ],
+        "Model 44": [
+            { word: "Examine", meaning: "Looking closely", ar: "يفحص" },
+            { word: "at the end", meaning: "after that", ar: "في النهاية" },
             { word: "Sequence", meaning: "Order", ar: "تسلسل" },
+            { word: "Major", meaning: "Important", ar: "رئيسي" },
             { word: "Consistent", meaning: "Steady", ar: "ثابت" },
             { word: "Peripheral", meaning: "Secondary", ar: "هامشي" },
+            { word: "Suffer", meaning: "Having problems", ar: "يعاني" }
+        ],
+        "Model 45": [
+            { word: "Brighter", meaning: "More shiny", ar: "أكثر سطوع" },
+            { word: "Suffered", meaning: "Experienced", ar: "عانى" },
             { word: "Lanes", meaning: "Routes", ar: "ممرات" },
+            { word: "Elaborated", meaning: "Explained", ar: "أوضح" },
             { word: "Recur", meaning: "Repeat", ar: "يتكرر" },
             { word: "Pioneering", meaning: "Original", ar: "أصلي" },
             { word: "Pitting", meaning: "Forcing", ar: "مواجهة" },
-            { word: "Moot", meaning: "Arguable", ar: "موضع نقاش" },
-            { word: "Exorbitant", meaning: "Steep", ar: "هائل" },
+            { word: "Moot", meaning: "Arguable", ar: "موضع للنقاش" },
+            { word: "Exorbitant", meaning: "Steep", ar: "هائل" }
+        ],
+        "Model 46": [
+            { word: "Brighter", meaning: "More shiny", ar: "أكثر سطوع" },
+            { word: "However", meaning: "Though", ar: "على الرغم من ذلك" },
             { word: "Also", meaning: "As well", ar: "أيضاً" },
             { word: "soil", meaning: "Land", ar: "تربة" },
+            { word: "Additional", meaning: "Extra", ar: "إضافية" },
             { word: "Inhabited", meaning: "Occupied", ar: "مأهولة" },
-            { word: "Indigenous", meaning: "Native", ar: "سكان محليين" },
+            { word: "Indigenous", meaning: "Native", ar: "السكان الأصليين" },
+            { word: "Far fetched", meaning: "Difficult to believe", ar: "صعب التصديق" }
+        ],
+        "Model 47": [
+            { word: "examine", meaning: "looking", ar: "يفحص" },
             { word: "familiar", meaning: "Well-known", ar: "مألوف" },
             { word: "methods", meaning: "ways", ar: "طرق" },
             { word: "distinct", meaning: "different", ar: "مختلف" },
             { word: "comprise", meaning: "contain", ar: "يضم" },
             { word: "constitute", meaning: "forms", ar: "تشكل" },
+            { word: "suffer", meaning: "problems", ar: "يعاني" }
+        ],
+        "Model 48": [
+            { word: "major", meaning: "important", ar: "رئيسى" },
             { word: "identify", meaning: "name", ar: "يصنف" },
+            { word: "vacant", meaning: "empty", ar: "فارغ" }
+        ],
+        "Model 49": [
+            { word: "assumed", meaning: "took", ar: "أخذ" },
             { word: "agricultural", meaning: "farming", ar: "زراعي" },
+            { word: "extracted", meaning: "took", ar: "استخلص" },
             { word: "random", meaning: "unplanned", ar: "عشوائي" },
-            { word: "legitimate", meaning: "acceptable", ar: "مقبول" },
+            { word: "legitimate", meaning: "acceptable", ar: "شرعي" },
             { word: "perplexed", meaning: "confused", ar: "مرتبك" },
             { word: "aquatic", meaning: "ocean", ar: "مائي" },
             { word: "polluting", meaning: "harming", ar: "ملوث" },
             { word: "acidic", meaning: "toxic", ar: "حمضي" },
+            { word: "lacking", meaning: "missing", ar: "مفقود" }
+        ],
+        "Model 50": [
             { word: "purchase", meaning: "buy", ar: "شراء" },
             { word: "hike", meaning: "increase", ar: "زيادة" },
             { word: "alarming", meaning: "frightening", ar: "مفزع" },
-            { word: "plunge", meaning: "launch", ar: "إطلاق بقوة" }
+            { word: "plunge", meaning: "launch", ar: "إطلاق بقوة" },
+            { word: "premature", meaning: "early", ar: "مبكر" }
         ]
     };
 
