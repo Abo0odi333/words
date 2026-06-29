@@ -227,7 +227,8 @@
     <div id="setup-screen" class="setup-card">
         <label for="model-select">اختر النموذج المستهدف للتدريب:</label>
         <select id="model-select">
-            <!-- سيتم تعبئتها ديناميكياً -->
+            <option value="all_combined">--- اختبار شامل لجميع الأسئلة الفريدة (125 سؤالاً) ---</option>
+            <!-- سيتم تعبئتها ديناميكياً بباقي النماذج -->
         </select>
         <button class="btn" onclick="startQuiz()">ابدأ الاختبار الآن</button>
     </div>
@@ -261,7 +262,7 @@
 </div>
 
 <script>
-    // قاعدة البيانات بعد فك الدمج وفصل كل نموذج على حدة بالتفصيل
+    // قاعدة البيانات الكامله لكل نموذج بشكل مستقل
     const allData = {
         "المقدمة (صفحة 50)": [
             { word: "food", meaning: "fuel", ar: "طعام – وقود" },
@@ -644,7 +645,7 @@
     let score = 0;
     let hasAnswered = false;
 
-    // تجميع كل المترادفات المتاحة في ملف واحد لإنشاء الخيارات الخاطئة منها
+    // تجميع كل المترادفات الفريدة لإنشاء الخيارات الخاطئة
     const allMeaningsPool = [];
     for (let model in allData) {
         allData[model].forEach(item => {
@@ -654,7 +655,7 @@
         });
     }
 
-    // تشغيل عند تحميل الصفحة
+    // تعبئة قائمة الاختيارات عند فتح الصفحة وحذف التكرار
     window.onload = function() {
         const select = document.getElementById('model-select');
         for (let modelName in allData) {
@@ -665,12 +666,28 @@
         }
     };
 
-    // بدء الاختبار لنموذج معين
+    // بدء الاختبار
     function startQuiz() {
         const selectedModel = document.getElementById('model-select').value;
-        const rawData = allData[selectedModel];
+        let rawData = [];
         
-        // خلط الكلمات لضمان التنوع العشوائي الكامل عند كل محاولة بدء جديدة
+        if (selectedModel === "all_combined") {
+            // تجميع الأسئلة مع فلترة وحذف الكلمات المكررة لضمان وجود 125 سؤالاً فريداً فقط
+            let seenWords = new Set();
+            for (let model in allData) {
+                allData[model].forEach(item => {
+                    let uniqueKey = item.word.toLowerCase().trim() + "||" + item.meaning.toLowerCase().trim();
+                    if (!seenWords.has(uniqueKey)) {
+                        seenWords.add(uniqueKey);
+                        rawData.push(item);
+                    }
+                });
+            }
+        } else {
+            rawData = allData[selectedModel];
+        }
+        
+        // خلط الأسئلة عشوائياً بالكامل
         currentQuestions = [...rawData].sort(() => 0.5 - Math.random());
         currentQuestionIndex = 0;
         score = 0;
@@ -686,25 +703,21 @@
         hasAnswered = false;
         document.getElementById('next-btn').classList.add('hidden');
         
-        // إخفاء الترجمة العربية في بداية السؤال الجديد
         const translationElement = document.getElementById('translation-hint');
         translationElement.classList.add('hidden');
         
         const currentItem = currentQuestions[currentQuestionIndex];
         
-        // تحديث شريط التقدم والبيانات الميتا
+        // تحديث شريط التقدم والعداد
         const total = currentQuestions.length;
         document.getElementById('question-number').textContent = `السؤال ${currentQuestionIndex + 1} من ${total}`;
         document.getElementById('progress-fill').style.width = `${((currentQuestionIndex) / total) * 100}%`;
         
-        // تعيين نصوص الكلمات
         document.getElementById('question-word').textContent = currentItem.word;
         document.getElementById('translation-hint').textContent = `الترجمة التقريبية: ${currentItem.ar}`;
 
-        // توليد الخيارات (الخيار الصحيح + 3 خيارات خاطئة من الملف)
+        // توليد الخيارات
         const options = [currentItem.meaning];
-        
-        // سحب خيارات عشوائية خاطئة لا تشبه الإجابة الصحيحة
         const filteredPool = allMeaningsPool.filter(m => m !== currentItem.meaning);
         const shuffledPool = filteredPool.sort(() => 0.5 - Math.random());
         
@@ -712,10 +725,8 @@
             options.push(shuffledPool[i]);
         }
 
-        // خلط الخيارات الأربعة لكي لا تصبح الإجابة الصحيحة في نفس المكان دائماً
         options.sort(() => 0.5 - Math.random());
 
-        // بناء أزرار الخيارات داخل الصفحة
         const container = document.getElementById('options-container');
         container.innerHTML = '';
         
@@ -728,9 +739,8 @@
         });
     }
 
-    // التحقق من الإجابة المختارة
     function checkAnswer(selectedBtn, chosenOption, correctOption) {
-        if (hasAnswered) return; // منع التعديل بعد الاختيار
+        if (hasAnswered) return;
         hasAnswered = true;
 
         const container = document.getElementById('options-container');
@@ -741,7 +751,6 @@
             score++;
         } else {
             selectedBtn.classList.add('incorrect');
-            // إظهار الإجابة الصحيحة بلون أخضر
             for (let btn of buttons) {
                 if (btn.textContent === correctOption) {
                     btn.classList.add('correct');
@@ -749,14 +758,10 @@
             }
         }
 
-        // إظهار الترجمة العربية الآن بعد الاختيار لتعزيز الحفظ والفهم للمتعلم
         document.getElementById('translation-hint').classList.remove('hidden');
-
-        // إظهار زر الانتقال للسؤال القادم
         document.getElementById('next-btn').classList.remove('hidden');
     }
 
-    // الانتقال للسؤال التالي أو عرض النتيجة
     function nextQuestion() {
         currentQuestionIndex++;
         if (currentQuestionIndex < currentQuestions.length) {
@@ -766,7 +771,6 @@
         }
     }
 
-    // شاشة عرض النتيجة النهائية
     function showResults() {
         document.getElementById('quiz-screen').classList.add('hidden');
         document.getElementById('results-screen').classList.remove('hidden');
@@ -784,7 +788,6 @@
         document.getElementById('feedback-text').textContent = feedback;
     }
 
-    // إعادة تصفير التطبيق والعودة للقائمة الرئيسية
     function restartApp() {
         document.getElementById('results-screen').classList.add('hidden');
         document.getElementById('setup-screen').classList.remove('hidden');
